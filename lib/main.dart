@@ -25,7 +25,7 @@ import 'package:health_kit_reporter/model/type/quantity_type.dart';
 import 'package:health_kit_reporter/model/type/series_type.dart';
 import 'package:health_kit_reporter/model/type/workout_type.dart';
 import 'package:health_kit_reporter/model/update_frequency.dart';
-import 'package:http/http.dart' as http;
+
 void main() {
   runApp(MyApp());
 }
@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
     DateTime.now().add(Duration(days: -365)),
     DateTime.now(),
   );
+  
   final _device = Device(
     'FlutterTracker',
     'kvs',
@@ -62,12 +63,12 @@ class _MyAppState extends State<MyApp> {
   );
 
   SourceRevision get _sourceRevision => SourceRevision(
-    _source,
-    '5',
-    'fit',
-    '4',
-    _operatingSystem,
-  );
+        _source,
+        '5',
+        'fit',
+        '4',
+        _operatingSystem,
+      );
 
   bool _isAuthorizationRequested = false;
 
@@ -76,32 +77,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     final initializationSettingsIOs = IOSInitializationSettings();
     final initSettings = InitializationSettings(iOS: initializationSettingsIOs);
-    _flutterLocalNotificationsPlugin.initialize(initSettings,
-        onSelectNotification: (string) {
-          print(string);
-          // return Future.value(string);
-        });
-  }
-
-  Future<void> createData(String title) async {
-    final response = await http.post(
-      Uri.parse('http://3.111.72.181/post/sample_postapi'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'value': title,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      throw Exception('Failed to create album.');
-    }
+    // _flutterLocalNotificationsPlugin.initialize(initSettings,
+    //     onSelectNotification: (string) {
+    //   print(string);
+    //   return Future.value(string);
+    // });
   }
 
   @override
@@ -134,8 +114,8 @@ class _MyAppState extends State<MyApp> {
                     CategoryType.mindfulSession.identifier,
                   ];
                   final isRequested =
-                  await HealthKitReporter.requestAuthorization(
-                      readTypes, writeTypes);
+                      await HealthKitReporter.requestAuthorization(
+                          readTypes, writeTypes);
                   setState(() => _isAuthorizationRequested = isRequested);
                 } catch (e) {
                   print(e);
@@ -148,136 +128,136 @@ class _MyAppState extends State<MyApp> {
         body: SingleChildScrollView(
           child: _isAuthorizationRequested
               ? Center(
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    Text('READ'),
-                    ElevatedButton(
-                        onPressed: () {
-                          handleQuantitiySamples();
-                        },
-                        child: Text('preferredUnit:quantity:statistics')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryCharacteristics();
-                        },
-                        child: Text('characteristics')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryCategory();
-                        },
-                        child: Text('categories')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryWorkout();
-                        },
-                        child: Text('workouts')),
-                    ElevatedButton(
-                        onPressed: () {
-                          querySamples();
-                        },
-                        child: Text('samples')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryHeartbeatSeries();
-                        },
-                        child: Text('heartbeatSeriesQuery')),
-                    ElevatedButton(
-                        onPressed: () {
-                          querySources();
-                        },
-                        child: Text('sources')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryCorrelations();
-                        },
-                        child: Text('correlations')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryElectrocardiograms();
-                        },
-                        child: Text('electrocardiograms')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryActivitySummary();
-                        },
-                        child: Text('activitySummary')),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('WRITE'),
-                    ElevatedButton(
-                      onPressed: () {
-                        saveWorkout();
-                      },
-                      child: Text('saveWorkout'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        saveSteps();
-                      },
-                      child: Text('saveSteps'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        saveMindfulMinutes();
-                      },
-                      child: Text('saveMindfulMinutes'),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('OBSERVE'),
-                    ElevatedButton(
-                        onPressed: () {
-                          observerQuery([
-                            QuantityType.stepCount.identifier,
-                            QuantityType.heartRate.identifier,
-                          ]);
-                        },
-                        child: Text('observerQuery - STEPS and HR')),
-                    ElevatedButton(
-                        onPressed: () {
-                          anchoredObjectQuery([
-                            QuantityType.stepCount.identifier,
-                            QuantityType.heartRate.identifier,
-                          ]);
-                        },
-                        child:
-                        Text('anchoredObjectQuery - STEPS and HR')),
-                    ElevatedButton(
-                        onPressed: () {
-                          queryActivitySummaryUpdates();
-                        },
-                        child: Text('queryActivitySummaryUpdates')),
-                    ElevatedButton(
-                        onPressed: () {
-                          statisticsCollectionQuery();
-                        },
-                        child: Text('statisticsCollectionQuery')),
-                    ElevatedButton(
-                        onPressed: () {
-                          workoutRouteQuery();
-                        },
-                        child: Text('workoutRouteQuery')),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('DELETE'),
-                    ElevatedButton(
-                        onPressed: () {
-                          deleteSteps();
-                        },
-                        child: Text('deleteSteps')),
-                  ],
-                ),
-              ],
-            ),
-          )
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          Text('READ'),
+                          ElevatedButton(
+                              onPressed: () {
+                                handleQuantitiySamples();
+                              },
+                              child: Text('preferredUnit:quantity:statistics')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryCharacteristics();
+                              },
+                              child: Text('characteristics')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryCategory();
+                              },
+                              child: Text('categories')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryWorkout();
+                              },
+                              child: Text('workouts')),
+                          ElevatedButton(
+                              onPressed: () {
+                                querySamples();
+                              },
+                              child: Text('samples')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryHeartbeatSeries();
+                              },
+                              child: Text('heartbeatSeriesQuery')),
+                          ElevatedButton(
+                              onPressed: () {
+                                querySources();
+                              },
+                              child: Text('sources')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryCorrelations();
+                              },
+                              child: Text('correlations')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryElectrocardiograms();
+                              },
+                              child: Text('electrocardiograms')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryActivitySummary();
+                              },
+                              child: Text('activitySummary')),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('WRITE'),
+                          ElevatedButton(
+                            onPressed: () {
+                              saveWorkout();
+                            },
+                            child: Text('saveWorkout'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              saveSteps();
+                            },
+                            child: Text('saveSteps'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              saveMindfulMinutes();
+                            },
+                            child: Text('saveMindfulMinutes'),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('OBSERVE'),
+                          ElevatedButton(
+                              onPressed: () {
+                                observerQuery([
+                                  QuantityType.stepCount.identifier,
+                                  QuantityType.heartRate.identifier,
+                                ]);
+                              },
+                              child: Text('observerQuery - STEPS and HR')),
+                          ElevatedButton(
+                              onPressed: () {
+                                anchoredObjectQuery([
+                                  QuantityType.stepCount.identifier,
+                                  QuantityType.heartRate.identifier,
+                                ]);
+                              },
+                              child:
+                                  Text('anchoredObjectQuery - STEPS and HR')),
+                          ElevatedButton(
+                              onPressed: () {
+                                queryActivitySummaryUpdates();
+                              },
+                              child: Text('queryActivitySummaryUpdates')),
+                          ElevatedButton(
+                              onPressed: () {
+                                statisticsCollectionQuery();
+                              },
+                              child: Text('statisticsCollectionQuery')),
+                          ElevatedButton(
+                              onPressed: () {
+                                workoutRouteQuery();
+                              },
+                              child: Text('workoutRouteQuery')),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('DELETE'),
+                          ElevatedButton(
+                              onPressed: () {
+                                deleteSteps();
+                              },
+                              child: Text('deleteSteps')),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
               : Container(),
         ),
       ),
@@ -287,7 +267,7 @@ class _MyAppState extends State<MyApp> {
   void queryActivitySummary() async {
     try {
       final activitySummary =
-      await HealthKitReporter.queryActivitySummary(_predicate);
+          await HealthKitReporter.queryActivitySummary(_predicate);
       print('activitySummary: ${activitySummary.map((e) => e.map).toList()}');
     } catch (e) {
       print(e);
@@ -297,7 +277,7 @@ class _MyAppState extends State<MyApp> {
   void queryElectrocardiograms() async {
     try {
       final electrocardiograms =
-      await HealthKitReporter.electrocardiogramQuery(_predicate);
+          await HealthKitReporter.electrocardiogramQuery(_predicate);
       print(
           'electrocardiograms: ${electrocardiograms.map((e) => e.map).toList()}');
     } catch (e) {
@@ -342,7 +322,6 @@ class _MyAppState extends State<MyApp> {
             _sourceRevision,
             harmonized);
         print('try to save: ${steps.map}');
-        createData(steps.toString());
         final saved = await HealthKitReporter.save(steps);
         print('stepsSaved: $saved');
       } else {
@@ -499,10 +478,10 @@ class _MyAppState extends State<MyApp> {
         final type = QuantityTypeFactory.from(identifier);
         try {
           final quantities =
-          await HealthKitReporter.quantityQuery(type, unit, _predicate);
+              await HealthKitReporter.quantityQuery(type, unit, _predicate);
           print('quantity: ${quantities.map((e) => e.map).toList()}');
           final statistics =
-          await HealthKitReporter.statisticsQuery(type, unit, _predicate);
+              await HealthKitReporter.statisticsQuery(type, unit, _predicate);
           print('statistics: ${statistics.map}');
         } catch (e) {
           print(e);
@@ -514,15 +493,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   void observerQuery(List<String> identifiers) async {
-    final sub = HealthKitReporter.observerQuery(identifiers, _predicate,
+    final sub = HealthKitReporter.observerQuery(identifiers, null,
         onUpdate: (identifier) async {
-          print('Updates for observerQuerySub - $identifier');
-          print(identifier);
-          final iOSDetails = IOSNotificationDetails();
-          final details = NotificationDetails(iOS: iOSDetails);
-          await _flutterLocalNotificationsPlugin.show(
-              0, 'Observer', identifier, details);
-        });
+      print('Updates for observerQuerySub - $identifier');
+      print(identifier);
+      final iOSDetails = IOSNotificationDetails();
+      final details = NotificationDetails(iOS: iOSDetails);
+      await _flutterLocalNotificationsPlugin.show(
+          0, 'Observer', identifier, details);
+    });
     print('$identifiers observerQuerySub: $sub');
     for (final identifier in identifiers) {
       final isSet = await HealthKitReporter.enableBackgroundDelivery(
@@ -533,7 +512,7 @@ class _MyAppState extends State<MyApp> {
 
   void workoutRouteQuery() {
     final sub =
-    HealthKitReporter.workoutRouteQuery(_predicate, onUpdate: (serie) {
+        HealthKitReporter.workoutRouteQuery(_predicate, onUpdate: (serie) {
       print('Updates for workoutRouteQuery');
       print(serie.map);
     });
@@ -543,19 +522,19 @@ class _MyAppState extends State<MyApp> {
   void anchoredObjectQuery(List<String> identifiers) {
     final sub = HealthKitReporter.anchoredObjectQuery(identifiers, _predicate,
         onUpdate: (samples, deletedObjects) {
-          print('Updates for anchoredObjectQuerySub');
-          print(samples.map((e) => e.map).toList());
-          print(deletedObjects.map((e) => e.map).toList());
-        });
+      print('Updates for anchoredObjectQuerySub');
+      print(samples.map((e) => e.map).toList());
+      print(deletedObjects.map((e) => e.map).toList());
+    });
     print('$identifiers anchoredObjectQuerySub: $sub');
   }
 
   void queryActivitySummaryUpdates() {
     final sub = HealthKitReporter.queryActivitySummaryUpdates(_predicate,
         onUpdate: (samples) {
-          print('Updates for activitySummaryUpdatesSub');
-          print(samples.map((e) => e.map).toList());
-        });
+      print('Updates for activitySummaryUpdatesSub');
+      print(samples.map((e) => e.map).toList());
+    });
     print('activitySummaryUpdatesSub: $sub');
   }
 
