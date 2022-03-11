@@ -25,6 +25,8 @@ import 'package:health_kit_reporter/model/type/quantity_type.dart';
 import 'package:health_kit_reporter/model/type/series_type.dart';
 import 'package:health_kit_reporter/model/type/workout_type.dart';
 import 'package:health_kit_reporter/model/update_frequency.dart';
+import 'package:http/http.dart' as http;
+
 
 void main() {
   runApp(MyApp());
@@ -82,6 +84,27 @@ class _MyAppState extends State<MyApp> {
     //   print(string);
     //   return Future.value(string);
     // });
+  }
+
+   Future<void> createData(String title) async {
+    final response = await http.post(
+      Uri.parse('http://3.111.72.181/post/sample_postapi'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'value': title,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create album.');
+    }
   }
 
   @override
@@ -321,6 +344,7 @@ class _MyAppState extends State<MyApp> {
             _device,
             _sourceRevision,
             harmonized);
+            await createData(steps.toString());
         print('try to save: ${steps.map}');
         final saved = await HealthKitReporter.save(steps);
         print('stepsSaved: $saved');
