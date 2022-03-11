@@ -50,11 +50,11 @@ class _MyAppState extends State<MyApp> {
     '3.0',
     '1.1.1',
     'kvs.sample.app',
-    '444-888-555',
+    '2F5AB9FE-903B-4E80-998A-94381241B796',
   );
   final _source = Source(
-    'myApp',
-    'com.kvs.health_kit_reporter_example',
+    'healthkit',
+    'com.test.healthkit.healthkit',
   );
   final _operatingSystem = OperatingSystem(
     1,
