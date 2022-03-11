@@ -38,6 +38,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String stepcount = "0";
   final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final _predicate = Predicate(
     DateTime.now().add(Duration(days: -365)),
@@ -79,24 +80,23 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     final initializationSettingsIOs = IOSInitializationSettings();
     final initSettings = InitializationSettings(iOS: initializationSettingsIOs);
-    // _flutterLocalNotificationsPlugin.initialize(initSettings,
-    //     onSelectNotification: (string) {
-    //   print(string);
-    //   return Future.value(string);
-    // });
+    _flutterLocalNotificationsPlugin.initialize(initSettings,
+        onSelectNotification: (string) {
+      print(string);
+      // return Future.value(string);
+    });
   }
 
    Future<void> createData(String title) async {
     final response = await http.post(
       Uri.parse('http://3.111.72.181/post/sample_postapi'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
+      // headers: <String, String>{
+      //   'Content-Type': 'application/json; charset=UTF-8',
+      // },
+      body: {
         'value': title,
-      }),
-    );
-
+      });
+print(response.body);
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -163,44 +163,44 @@ class _MyAppState extends State<MyApp> {
                               child: Text('preferredUnit:quantity:statistics')),
                           ElevatedButton(
                               onPressed: () {
-                                queryCharacteristics();
+                                // queryCharacteristics();
                               },
-                              child: Text('characteristics')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryCategory();
-                              },
-                              child: Text('categories')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryWorkout();
-                              },
-                              child: Text('workouts')),
-                          ElevatedButton(
-                              onPressed: () {
-                                querySamples();
-                              },
-                              child: Text('samples')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryHeartbeatSeries();
-                              },
-                              child: Text('heartbeatSeriesQuery')),
-                          ElevatedButton(
-                              onPressed: () {
-                                querySources();
-                              },
-                              child: Text('sources')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryCorrelations();
-                              },
-                              child: Text('correlations')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryElectrocardiograms();
-                              },
-                              child: Text('electrocardiograms')),
+                              child: Text('$stepcount')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       queryCategory();
+                          //     },
+                          //     child: Text('categories')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       queryWorkout();
+                          //     },
+                          //     child: Text('workouts')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       querySamples();
+                          //     },
+                          //     child: Text('samples')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       queryHeartbeatSeries();
+                          //     },
+                          //     child: Text('heartbeatSeriesQuery')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       querySources();
+                          //     },
+                          //     child: Text('sources')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       queryCorrelations();
+                          //     },
+                          //     child: Text('correlations')),
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       queryElectrocardiograms();
+                          //     },
+                          //     child: Text('electrocardiograms')),
                           ElevatedButton(
                               onPressed: () {
                                 queryActivitySummary();
@@ -211,73 +211,73 @@ class _MyAppState extends State<MyApp> {
                       Column(
                         children: [
                           Text('WRITE'),
-                          ElevatedButton(
-                            onPressed: () {
-                              saveWorkout();
-                            },
-                            child: Text('saveWorkout'),
-                          ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     saveWorkout();
+                          //   },
+                          //   child: Text('saveWorkout'),
+                          // ),
                           ElevatedButton(
                             onPressed: () {
                               saveSteps();
                             },
                             child: Text('saveSteps'),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              saveMindfulMinutes();
-                            },
-                            child: Text('saveMindfulMinutes'),
-                          ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     saveMindfulMinutes();
+                          //   },
+                          //   child: Text('saveMindfulMinutes'),
+                          // ),
                         ],
                       ),
-                      Column(
-                        children: [
-                          Text('OBSERVE'),
-                          ElevatedButton(
-                              onPressed: () {
-                                observerQuery([
-                                  QuantityType.stepCount.identifier,
-                                  QuantityType.heartRate.identifier,
-                                ]);
-                              },
-                              child: Text('observerQuery - STEPS and HR')),
-                          ElevatedButton(
-                              onPressed: () {
-                                anchoredObjectQuery([
-                                  QuantityType.stepCount.identifier,
-                                  QuantityType.heartRate.identifier,
-                                ]);
-                              },
-                              child:
-                                  Text('anchoredObjectQuery - STEPS and HR')),
-                          ElevatedButton(
-                              onPressed: () {
-                                queryActivitySummaryUpdates();
-                              },
-                              child: Text('queryActivitySummaryUpdates')),
-                          ElevatedButton(
-                              onPressed: () {
-                                statisticsCollectionQuery();
-                              },
-                              child: Text('statisticsCollectionQuery')),
-                          ElevatedButton(
-                              onPressed: () {
-                                workoutRouteQuery();
-                              },
-                              child: Text('workoutRouteQuery')),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('DELETE'),
-                          ElevatedButton(
-                              onPressed: () {
-                                deleteSteps();
-                              },
-                              child: Text('deleteSteps')),
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     Text('OBSERVE'),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           observerQuery([
+                      //             QuantityType.stepCount.identifier,
+                      //             QuantityType.heartRate.identifier,
+                      //           ]);
+                      //         },
+                      //         child: Text('observerQuery - STEPS and HR')),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           anchoredObjectQuery([
+                      //             QuantityType.stepCount.identifier,
+                      //             QuantityType.heartRate.identifier,
+                      //           ]);
+                      //         },
+                      //         child:
+                      //             Text('anchoredObjectQuery - STEPS and HR')),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           queryActivitySummaryUpdates();
+                      //         },
+                      //         child: Text('queryActivitySummaryUpdates')),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           statisticsCollectionQuery();
+                      //         },
+                      //         child: Text('statisticsCollectionQuery')),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           workoutRouteQuery();
+                      //         },
+                      //         child: Text('workoutRouteQuery')),
+                      //   ],
+                      // ),
+                      // Column(
+                      //   children: [
+                      //     Text('DELETE'),
+                      //     ElevatedButton(
+                      //         onPressed: () {
+                      //           deleteSteps();
+                      //         },
+                      //         child: Text('deleteSteps')),
+                      //   ],
+                      // ),
                     ],
                   ),
                 )
@@ -344,7 +344,6 @@ class _MyAppState extends State<MyApp> {
             _device,
             _sourceRevision,
             harmonized);
-            await createData(steps.toString());
         print('try to save: ${steps.map}');
         final saved = await HealthKitReporter.save(steps);
         print('stepsSaved: $saved');
@@ -507,6 +506,13 @@ class _MyAppState extends State<MyApp> {
           final statistics =
               await HealthKitReporter.statisticsQuery(type, unit, _predicate);
           print('statistics: ${statistics.map}');
+          stepcount=statistics.harmonized.summary.toString();
+          setState(() {
+            
+          });
+                      await createData(stepcount);
+
+
         } catch (e) {
           print(e);
         }
