@@ -43,6 +43,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>For Test Purpose</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>For Testing Purpose</string>
 </dict>
 
 </plist>
